@@ -1,10 +1,9 @@
-package app;
+package main.java.app;
 
-import parser.MissionParser;
-import parser.MissionParserFactory;
-import domain.Mission;
-import io.MissionPrinter;
-import exception.MissionParsingException;
+import main.java.parser.MissionParser;
+import main.java.parser.MissionParserFactory;
+import main.java.io.MissionPrinter;
+import main.java.exception.MissionParsingException;
 
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -24,7 +23,7 @@ public class MissionAnalyzerApp {
         try {
             Path file = Path.of(pathInput);
             MissionParser parser = MissionParserFactory.getParser(file);
-            domain.Mission mission = parser.parse(file);
+            main.java.domain.Mission mission = parser.parse(file);
             MissionPrinter.print(mission, System.out);
         } catch (MissionParsingException e) {
             System.err.println("Parsing error: " + e.getMessage());

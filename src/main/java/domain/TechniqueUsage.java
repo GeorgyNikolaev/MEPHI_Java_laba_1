@@ -1,6 +1,4 @@
-package domain;
-
-import java.util.Objects;
+package main.java.domain;
 
 public class TechniqueUsage {
 

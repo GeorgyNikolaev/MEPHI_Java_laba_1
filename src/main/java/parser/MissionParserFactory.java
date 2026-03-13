@@ -1,4 +1,4 @@
-package parser;
+package main.java.parser;
 
 import java.nio.file.Path;
 

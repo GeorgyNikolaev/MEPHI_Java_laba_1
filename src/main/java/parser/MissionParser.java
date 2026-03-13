@@ -1,13 +1,13 @@
-package parser;
+package main.java.parser;
 
-import domain.Mission;
-import exception.MissionParsingException;
+import main.java.domain.Mission;
+import main.java.exception.MissionParsingException;
 
 import java.nio.file.Path;
 
 public interface MissionParser {
     /**
-     * Parse file into domain.Mission.
+     * Parse file into main.java.domain.Mission.
      *
      * @param file path to input file
      * @return Mission instance

@@ -1,4 +1,4 @@
-package enums;
+package main.java.enums;
 
 public enum ThreatLevel {
     LOW,

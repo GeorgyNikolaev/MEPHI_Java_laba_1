@@ -1,8 +1,8 @@
-package parser;
+package main.java.parser;
 
-import domain.*;
-import enums.*;
-import exception.MissionParsingException;
+import main.java.domain.*;
+import main.java.enums.*;
+import main.java.exception.MissionParsingException;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DOM-based XML parser. Expects structure similar to sample:
+ * DOM-based XML main.java.parser. Expects structure similar to sample:
  * <mission> <missionId/> <date/> <location/> <outcome/> <damageCost/> <curse>...</curse>
  * <sorcerers><sorcerer>...</sorcerer></sorcerers>
  * <techniques><technique>...</technique></techniques>

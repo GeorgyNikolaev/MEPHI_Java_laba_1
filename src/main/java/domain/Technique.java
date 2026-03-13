@@ -1,7 +1,6 @@
-package domain;
+package main.java.domain;
 
-import enums.TechniqueType;
-import java.util.Objects;
+import main.java.enums.TechniqueType;
 
 public class Technique {
 
