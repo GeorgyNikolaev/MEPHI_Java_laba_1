@@ -1,9 +1,10 @@
-package main.java.app;
+package app;
 
-import main.java.parser.MissionParser;
-import main.java.parser.MissionParserFactory;
-import main.java.io.MissionPrinter;
-import main.java.exception.MissionParsingException;
+import domain.Mission;
+import parser.MissionParser;
+import parser.MissionParserFactory;
+import io.MissionPrinter;
+import exception.MissionParsingException;
 
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -11,26 +12,36 @@ import java.util.Scanner;
 public class MissionAnalyzerApp {
 
     public static void main(String[] args) {
-        String pathInput;
-        if (args != null && args.length > 0 && args[0] != null && !args[0].isBlank()) {
-            pathInput = args[0];
-        } else {
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter path to mission file: ");
-            pathInput = scanner.nextLine().trim();
-        }
+        try (Scanner scanner = new Scanner(System.in)) {
+            String pathInput;
 
-        try {
-            Path file = Path.of(pathInput);
-            MissionParser parser = MissionParserFactory.getParser(file);
-            main.java.domain.Mission mission = parser.parse(file);
-            MissionPrinter.print(mission, System.out);
-        } catch (MissionParsingException e) {
-            System.err.println("Parsing error: " + e.getMessage());
-            e.printStackTrace(System.err);
+            System.out.println("Program started.");
+
+            while (true) {
+                System.out.print("Enter path to mission file (or 'q' to exit): ");
+                pathInput = scanner.nextLine().trim();
+
+                if (pathInput.equals("q")) {
+                    System.out.println("Exiting...");
+                    break;
+                }
+
+                try {
+                    Path file = Path.of(pathInput);
+                    MissionParser parser = MissionParserFactory.getParser(file);
+                    Mission mission = parser.parse(file);
+                    MissionPrinter.print(mission, System.out);
+                } catch (MissionParsingException e) {
+                    System.out.println("Ошибка парсинга: " + e.getMessage() + "\n");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Файл с путем: `" + pathInput + "` не найден.\n");
+                } catch (Exception e) {
+                    System.out.println("Неизвестная ошибка: " + e.getMessage() + "\n");
+                    e.printStackTrace(System.err);
+                }
+            }
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            e.printStackTrace(System.err);
+            e.printStackTrace();
         }
     }
 }

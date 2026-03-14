@@ -1,8 +1,8 @@
-package main.java.parser;
+package parser;
 
-import main.java.domain.*;
-import main.java.enums.*;
-import main.java.exception.MissionParsingException;
+import domain.*;
+import enums.*;
+import exception.MissionParsingException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- * Simple key-value style text main.java.parser.
+ * Simple key-value style text parser.
  * Expected lines:
  * key: value
  * keys may be:

@@ -1,11 +1,11 @@
-package main.java.parser;
+package parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import main.java.domain.*;
-import main.java.enums.*;
+import domain.*;
+import enums.*;
 
-import main.java.exception.MissionParsingException;
+import exception.MissionParsingException;
 
 import java.io.IOException;
 import java.nio.file.Path;

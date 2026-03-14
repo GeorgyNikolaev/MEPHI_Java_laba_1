@@ -1,6 +1,6 @@
-package main.java.domain;
+package domain;
 
-import main.java.enums.SorcererRank;
+import enums.SorcererRank;
 
 public class Sorcerer {
 

@@ -1,8 +1,8 @@
-package main.java.parser;
+package parser;
 
-import main.java.domain.*;
-import main.java.enums.*;
-import main.java.exception.MissionParsingException;
+import domain.*;
+import enums.*;
+import exception.MissionParsingException;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;

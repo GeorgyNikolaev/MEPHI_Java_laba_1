@@ -1,6 +1,6 @@
-package main.java.io;
+package io;
 
-import main.java.domain.*;
+import domain.*;
 import java.io.PrintStream;
 import java.util.List;
 

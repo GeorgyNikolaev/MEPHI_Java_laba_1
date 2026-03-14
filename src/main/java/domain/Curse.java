@@ -1,6 +1,6 @@
-package main.java.domain;
+package domain;
 
-import main.java.enums.ThreatLevel;
+import enums.ThreatLevel;
 
 public class Curse {
 

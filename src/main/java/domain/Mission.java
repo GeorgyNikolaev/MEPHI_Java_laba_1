@@ -1,6 +1,6 @@
-package main.java.domain;
+package domain;
 
-import main.java.enums.MissionOutcome;
+import enums.MissionOutcome;
 
 import java.time.LocalDate;
 import java.util.List;
