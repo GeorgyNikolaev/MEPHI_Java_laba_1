@@ -13,12 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DOM-based XML main.java.parser. Expects structure similar to sample:
- * <mission> <missionId/> <date/> <location/> <outcome/> <damageCost/> <curse>...</curse>
- * <sorcerers><sorcerer>...</sorcerer></sorcerers>
- * <techniques><technique>...</technique></techniques>
- */
+
 public class XmlMissionParser implements MissionParser {
 
     @Override

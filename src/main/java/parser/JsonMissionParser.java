@@ -13,14 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- Maven dependency (add to pom.xml):
- <dependency>
-   <groupId>com.fasterxml.jackson.core</groupId>
-   <artifactId>jackson-databind</artifactId>
-   <version>2.14.2</version>
- </dependency>
-*/
+
 public class JsonMissionParser implements MissionParser {
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -35,8 +28,8 @@ public class JsonMissionParser implements MissionParser {
             String location = getText(root, "location", true);
 
             MissionOutcome outcome = parseOutcome(getText(root, "outcome", false));
-            long damageCost = root.has("damageCost") ? root.get("damageCost").asLong(0) : 0L;
-            String comment = root.has("note") ? root.get("note").asText(null) : null;
+            long damageCost = getLong(root, "damageCost", false);
+            String comment = getText(root, "node", false);
 
             // curse
             JsonNode curseNode = root.path("curse");
@@ -52,27 +45,27 @@ public class JsonMissionParser implements MissionParser {
             JsonNode sorcs = root.path("sorcerers");
             if (sorcs.isArray()) {
                 for (JsonNode sn : sorcs) {
-                    String name = getText(sn, "name", true);
-                    SorcererRank rank = parseSorcererRank(getText(sn, "rank", false));
-                    sorcerers.add(new Sorcerer(name, rank));
+                    String sorcererName = getText(sn, "name", true);
+                    SorcererRank sorcererRank = parseSorcererRank(getText(sn, "rank", false));
+                    sorcerers.add(new Sorcerer(sorcererName, sorcererRank));
                 }
             }
 
-            // techniques -> TechniqueUsage (technique + owner)
+            // techniques
             List<TechniqueUsage> techniques = new ArrayList<>();
             JsonNode techs = root.path("techniques");
             if (techs.isArray()) {
                 for (JsonNode tn : techs) {
-                    String tname = getText(tn, "name", true);
-                    TechniqueType ttype = parseTechniqueType(getText(tn, "type", false));
+                    String techName = getText(tn, "name", true);
+                    TechniqueType techType = parseTechniqueType(getText(tn, "type", false));
                     String ownerName = getText(tn, "owner", false);
-                    long damage = tn.has("damage") ? tn.get("damage").asLong(0L) : 0L;
+                    long damage = getLong(tn, "damage", true);
 
-                    Technique technique = new Technique(tname, ttype);
+                    Technique technique = new Technique(techName, techType);
 
                     Sorcerer owner = findSorcererByName(sorcerers, ownerName);
                     if (owner == null && ownerName != null) {
-                        // create placeholder sorcerer with null rank
+                        // Создаем заглушку
                         owner = new Sorcerer(ownerName, null);
                         sorcerers.add(owner);
                     }
@@ -84,19 +77,28 @@ public class JsonMissionParser implements MissionParser {
             return new Mission(missionId, date, location, outcome, damageCost, curse, sorcerers, techniques, comment);
 
         } catch (IOException e) {
-            throw new MissionParsingException("Failed to read JSON file: " + e.getMessage(), e);
+            throw new MissionParsingException("Ошибка чтения JSON файла: " + e.getMessage(), e);
         } catch (RuntimeException e) {
-            throw new MissionParsingException("Invalid JSON structure: " + e.getMessage(), e);
+            throw new MissionParsingException("Недопустимая JSON структура: " + e.getMessage(), e);
         }
     }
 
     private String getText(JsonNode node, String field, boolean required) {
         JsonNode v = node.get(field);
         if (v == null || v.isNull()) {
-            if (required) throw new RuntimeException("Missing required field: " + field);
-            return null;
+            if (required) throw new RuntimeException("Не найдено обязательное поле: " + field);
+            return "";
         }
         return v.asText();
+    }
+
+    private Long getLong(JsonNode node, String field, boolean required) {
+        JsonNode v = node.get(field);
+        if (v == null || v.isNull()) {
+            if (required) throw new RuntimeException("Не найдено обязательное поле: " + field);
+            return 0L;
+        }
+        return v.asLong(0);
     }
 
     private Sorcerer findSorcererByName(List<Sorcerer> list, String name) {
