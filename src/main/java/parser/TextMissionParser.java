@@ -10,17 +10,8 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
 
-/**
- * Simple key-value style text parser.
- * Expected lines:
- * key: value
- * keys may be:
- *  missionId, date, location, outcome, damageCost, note
- *  curse.name, curse.threatLevel
- *  sorcerer[0].name, sorcerer[0].rank
- *  technique[0].name, technique[0].type, technique[0].owner, technique[0].damage
- */
-public class TextMissionParser implements MissionParser {
+
+public class TextMissionParser extends MissionParser {
 
     @Override
     public Mission parse(Path file) throws MissionParsingException {
@@ -163,42 +154,5 @@ public class TextMissionParser implements MissionParser {
         }
 
         return new Mission(missionId, date, location, outcome, damageCost, curse, sorcerers, techniques, comment);
-    }
-
-    private MissionOutcome parseOutcome(String raw) {
-        if (raw == null) return MissionOutcome.UNKNOWN;
-        try { return MissionOutcome.valueOf(raw.trim()); }
-        catch (Exception e) { return MissionOutcome.UNKNOWN; }
-    }
-
-    private ThreatLevel parseThreatLevel(String raw) {
-        if (raw == null) return null;
-        try { return ThreatLevel.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private SorcererRank parseSorcererRank(String raw) {
-        if (raw == null) return null;
-        try { return SorcererRank.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private TechniqueType parseTechniqueType(String raw) {
-        if (raw == null) return null;
-        try { return TechniqueType.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private long parseLongSafe(String raw, long defaultValue) {
-        if (raw == null) return defaultValue;
-        try { return Long.parseLong(raw.trim()); } catch (Exception e) { return defaultValue; }
-    }
-
-    private Sorcerer findSorcererByName(List<Sorcerer> list, String name) {
-        if (name == null) return null;
-        for (Sorcerer s : list) {
-            if (s.getName() != null && s.getName().equals(name)) return s;
-        }
-        return null;
     }
 }

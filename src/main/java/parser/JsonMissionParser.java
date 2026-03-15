@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class JsonMissionParser implements MissionParser {
+public class JsonMissionParser extends MissionParser {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -28,7 +28,7 @@ public class JsonMissionParser implements MissionParser {
             String location = getText(root, "location", true);
 
             MissionOutcome outcome = parseOutcome(getText(root, "outcome", false));
-            long damageCost = getLong(root, "damageCost", false);
+            long damageCost = parseLongSafe(getText(root, "damageCost", false));
             String comment = getText(root, "node", false);
 
             // curse
@@ -59,7 +59,7 @@ public class JsonMissionParser implements MissionParser {
                     String techName = getText(tn, "name", true);
                     TechniqueType techType = parseTechniqueType(getText(tn, "type", false));
                     String ownerName = getText(tn, "owner", false);
-                    long damage = getLong(tn, "damage", true);
+                    long damage = parseLongSafe(getText(tn, "damage", true));
 
                     Technique technique = new Technique(techName, techType);
 
@@ -90,46 +90,5 @@ public class JsonMissionParser implements MissionParser {
             return "";
         }
         return v.asText();
-    }
-
-    private Long getLong(JsonNode node, String field, boolean required) {
-        JsonNode v = node.get(field);
-        if (v == null || v.isNull()) {
-            if (required) throw new RuntimeException("Не найдено обязательное поле: " + field);
-            return 0L;
-        }
-        return v.asLong(0);
-    }
-
-    private Sorcerer findSorcererByName(List<Sorcerer> list, String name) {
-        if (name == null) return null;
-        for (Sorcerer s : list) {
-            if (s.getName() != null && s.getName().equals(name)) return s;
-        }
-        return null;
-    }
-
-    private MissionOutcome parseOutcome(String raw) {
-        if (raw == null) return MissionOutcome.UNKNOWN;
-        try { return MissionOutcome.valueOf(raw.trim()); }
-        catch (Exception e) { return MissionOutcome.UNKNOWN; }
-    }
-
-    private ThreatLevel parseThreatLevel(String raw) {
-        if (raw == null) return null;
-        try { return ThreatLevel.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private SorcererRank parseSorcererRank(String raw) {
-        if (raw == null) return null;
-        try { return SorcererRank.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private TechniqueType parseTechniqueType(String raw) {
-        if (raw == null) return null;
-        try { return TechniqueType.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
     }
 }

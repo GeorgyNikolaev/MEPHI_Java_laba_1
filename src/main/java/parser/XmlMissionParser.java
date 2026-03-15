@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class XmlMissionParser implements MissionParser {
+public class XmlMissionParser extends MissionParser{
 
     @Override
     public Mission parse(Path file) throws MissionParsingException {
@@ -27,7 +27,7 @@ public class XmlMissionParser implements MissionParser {
             LocalDate date = LocalDate.parse(getTextContent(root, "date", true));
             String location = getTextContent(root, "location", true);
             MissionOutcome outcome = parseOutcome(getTextContent(root, "outcome", false));
-            long damageCost = parseLongSafe(getTextContent(root, "damageCost", false), 0L);
+            long damageCost = parseLongSafe(getTextContent(root, "damageCost", false));
             String comment = getTextContent(root, "note", false);
 
             // curse
@@ -58,7 +58,7 @@ public class XmlMissionParser implements MissionParser {
                 String tname = getTextContent(tEl, "name", true);
                 TechniqueType ttype = parseTechniqueType(getTextContent(tEl, "type", false));
                 String ownerName = getTextContent(tEl, "owner", false);
-                long damage = parseLongSafe(getTextContent(tEl, "damage", false), 0L);
+                long damage = parseLongSafe(getTextContent(tEl, "damage", false));
 
                 Technique technique = new Technique(tname, ttype);
                 Sorcerer owner = findSorcererByName(sorcerers, ownerName);
@@ -74,7 +74,7 @@ public class XmlMissionParser implements MissionParser {
         } catch (MissionParsingException e) {
             throw e;
         } catch (Exception e) {
-            throw new MissionParsingException("Failed to parse XML: " + e.getMessage(), e);
+            throw new MissionParsingException("Ошибка парсинга XML: " + e.getMessage(), e);
         }
     }
 
@@ -82,45 +82,8 @@ public class XmlMissionParser implements MissionParser {
         NodeList nodes = parent.getElementsByTagName(tag);
         if (nodes.getLength() == 0) {
             if (required) throw new MissionParsingException("Missing required tag: " + tag);
-            return null;
+            return "";
         }
         return nodes.item(0).getTextContent();
-    }
-
-    private MissionOutcome parseOutcome(String raw) {
-        if (raw == null) return MissionOutcome.UNKNOWN;
-        try { return MissionOutcome.valueOf(raw.trim()); }
-        catch (Exception e) { return MissionOutcome.UNKNOWN; }
-    }
-
-    private ThreatLevel parseThreatLevel(String raw) {
-        if (raw == null) return null;
-        try { return ThreatLevel.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private SorcererRank parseSorcererRank(String raw) {
-        if (raw == null) return null;
-        try { return SorcererRank.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private TechniqueType parseTechniqueType(String raw) {
-        if (raw == null) return null;
-        try { return TechniqueType.valueOf(raw.trim()); }
-        catch (Exception e) { return null; }
-    }
-
-    private Sorcerer findSorcererByName(List<Sorcerer> list, String name) {
-        if (name == null) return null;
-        for (Sorcerer s : list) {
-            if (s.getName() != null && s.getName().equals(name)) return s;
-        }
-        return null;
-    }
-
-    private long parseLongSafe(String raw, long defaultValue) {
-        if (raw == null) return defaultValue;
-        try { return Long.parseLong(raw.trim()); } catch (Exception e) { return defaultValue; }
     }
 }
