@@ -29,9 +29,9 @@ public abstract class MissionParser {
     }
 
     protected MissionOutcome parseOutcome(String raw) {
-        if (raw == null) return MissionOutcome.UNKNOWN;
+        if (raw == null) return null;
         try { return MissionOutcome.valueOf(raw.trim()); }
-        catch (Exception e) { return MissionOutcome.UNKNOWN; }
+        catch (Exception e) { return null; }
     }
 
     protected ThreatLevel parseThreatLevel(String raw) {

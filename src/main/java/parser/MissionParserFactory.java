@@ -11,7 +11,7 @@ public class MissionParserFactory {
             case "json" -> new JsonMissionParser();
             case "xml" -> new XmlMissionParser();
             case "txt", "text" -> new TextMissionParser();
-            default -> throw new IllegalArgumentException("Unsupported file extension for file: " + file);
+            default -> throw new IllegalArgumentException("Неизвестное расширение файла: " + file);
         };
     }
 

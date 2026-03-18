@@ -19,7 +19,7 @@ public class TextMissionParser extends MissionParser {
         try {
             lines = Files.readAllLines(file);
         } catch (IOException e) {
-            throw new MissionParsingException("Failed to read text file: " + e.getMessage(), e);
+            throw new MissionParsingException("Ошибка чтения текстового файла " + e.getMessage(), e);
         }
 
         String missionId = null;
@@ -32,7 +32,7 @@ public class TextMissionParser extends MissionParser {
         String curseName = null;
         ThreatLevel curseThreat = null;
 
-        // temporary storage for indexed entities
+        // Временное хранилище для индексированных объектов
         Map<Integer, Map<String, String>> sorcererMap = new HashMap<>();
         Map<Integer, Map<String, String>> techniqueMap = new HashMap<>();
 
@@ -46,7 +46,7 @@ public class TextMissionParser extends MissionParser {
             String key = line.substring(0, colon).trim();
             String value = line.substring(colon + 1).trim();
 
-            // simple fields
+            // Простые поля
             switch (key) {
                 case "missionId":
                     missionId = value;
@@ -63,8 +63,7 @@ public class TextMissionParser extends MissionParser {
                 case "damageCost":
                     damageCost = parseLongSafe(value, 0L);
                     continue;
-                case "note":
-                case "comment":
+                case "note", "comment":
                     comment = value;
                     continue;
             }
@@ -77,44 +76,29 @@ public class TextMissionParser extends MissionParser {
             }
 
             if (key.startsWith("sorcerer[")) {
-                // sorcerer[0].name
-                int idxStart = key.indexOf('[') + 1;
-                int idxEnd = key.indexOf(']');
-                if (idxStart <= 0 || idxEnd <= idxStart) continue;
-                int idx = Integer.parseInt(key.substring(idxStart, idxEnd));
-                String rest = key.substring(idxEnd + 1);
-                if (rest.startsWith(".")) rest = rest.substring(1);
-                sorcererMap.computeIfAbsent(idx, k -> new HashMap<>()).put(rest, value);
+                parse_array_in_line(sorcererMap, key, value);
                 continue;
             }
 
             if (key.startsWith("technique[")) {
-                int idxStart = key.indexOf('[') + 1;
-                int idxEnd = key.indexOf(']');
-                if (idxStart <= 0 || idxEnd <= idxStart) continue;
-                int idx = Integer.parseInt(key.substring(idxStart, idxEnd));
-                String rest = key.substring(idxEnd + 1);
-                if (rest.startsWith(".")) rest = rest.substring(1);
-                techniqueMap.computeIfAbsent(idx, k -> new HashMap<>()).put(rest, value);
-                continue;
+                parse_array_in_line(techniqueMap, key, value);
             }
-
-            // fallback: unrecognized key ignored
         }
 
-        // build curse
+        //  Curse
         Curse curse = null;
         if (curseName != null || curseThreat != null) {
             curse = new Curse(curseName, curseThreat);
         }
 
-        // build sorcerers list
+        // Sorcerers
         List<Sorcerer> sorcerers = new ArrayList<>();
         List<Integer> sIndices = new ArrayList<>(sorcererMap.keySet());
         Collections.sort(sIndices);
         for (Integer idx : sIndices) {
             Map<String, String> fields = sorcererMap.get(idx);
             if (fields == null) continue;
+
             String name = fields.get("name");
             SorcererRank rank = parseSorcererRank(fields.get("rank"));
             if (name != null) {
@@ -122,13 +106,14 @@ public class TextMissionParser extends MissionParser {
             }
         }
 
-        // build techniques
+        // Techniques
         List<TechniqueUsage> techniques = new ArrayList<>();
         List<Integer> tIndices = new ArrayList<>(techniqueMap.keySet());
         Collections.sort(tIndices);
         for (Integer idx : tIndices) {
             Map<String, String> fields = techniqueMap.get(idx);
             if (fields == null) continue;
+
             String tname = fields.get("name");
             TechniqueType ttype = parseTechniqueType(fields.get("type"));
             String ownerName = fields.get("owner");
@@ -154,5 +139,15 @@ public class TextMissionParser extends MissionParser {
         }
 
         return new Mission(missionId, date, location, outcome, damageCost, curse, sorcerers, techniques, comment);
+    }
+
+    private void parse_array_in_line(Map<Integer, Map<String, String>> arr, String key, String value) {
+        int idxStart = key.indexOf('[') + 1;
+        int idxEnd = key.indexOf(']');
+        if (idxStart <= 0 || idxEnd <= idxStart) return;
+        int idx = Integer.parseInt(key.substring(idxStart, idxEnd));
+        String rest = key.substring(idxEnd + 1);
+        if (rest.startsWith(".")) rest = rest.substring(1);
+        arr.computeIfAbsent(idx, k -> new HashMap<>()).put(rest, value);
     }
 }
