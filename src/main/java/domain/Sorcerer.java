@@ -2,23 +2,7 @@ package domain;
 
 import enums.SorcererRank;
 
-public class Sorcerer {
-
-    private final String name;
-    private final SorcererRank rank;
-
-    public Sorcerer(String name, SorcererRank rank) {
-        this.name = name;
-        this.rank = rank;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public SorcererRank getRank() {
-        return rank;
-    }
+public record Sorcerer(String name, SorcererRank rank) {
 
     @Override
     public String toString() {

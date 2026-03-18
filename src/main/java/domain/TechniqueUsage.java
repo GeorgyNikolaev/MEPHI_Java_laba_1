@@ -28,7 +28,7 @@ public class TechniqueUsage {
     public String toString() {
         return "TechniqueUsage{" +
                 "technique=" + technique +
-                ", owner=" + (owner != null ? owner.getName() : "null") +
+                ", owner=" + (owner != null ? owner.name() : "null") +
                 ", damage=" + damage +
                 '}';
     }

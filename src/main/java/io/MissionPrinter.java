@@ -9,28 +9,28 @@ public class MissionPrinter {
     public static void print(Mission mission, PrintStream out) {
         out.println("=== Отчет о Миссии ===");
         out.println();
-        out.println("ID миссии: " + safe(mission.getMissionId()));
-        out.println("Дата: " + safe(mission.getDate()));
-        out.println("Локация: " + safe(mission.getLocation()));
-        out.println("Исход: " + safe(mission.getOutcome()));
-        out.println("Суммарный урон: " + mission.getDamageCost());
+        out.println("ID миссии: " + safe(mission.missionId()));
+        out.println("Дата: " + safe(mission.date()));
+        out.println("Локация: " + safe(mission.location()));
+        out.println("Исход: " + safe(mission.outcome()));
+        out.println("Суммарный урон: " + mission.damageCost());
         out.println();
 
         out.println("Проклятия:");
-        Curse curse = mission.getCurse();
+        Curse curse = mission.curse();
         if (curse != null) {
-            out.println("  Имя: " + safe(curse.getName()));
-            out.println("  Уровень угрозы: " + safe(curse.getThreatLevel()));
+            out.println("  Имя: " + safe(curse.name()));
+            out.println("  Уровень угрозы: " + safe(curse.threatLevel()));
         } else {
             out.println("  <none>");
         }
         out.println();
 
         out.println("Маги:");
-        List<Sorcerer> sorcerers = mission.getSorcerers();
+        List<Sorcerer> sorcerers = mission.sorcerers();
         if (sorcerers != null && !sorcerers.isEmpty()) {
             for (Sorcerer s : sorcerers) {
-                out.println("  - " + safe(s.getName()) + (s.getRank() != null ? " (" + s.getRank() + ")" : ""));
+                out.println("  - " + safe(s.name()) + (s.rank() != null ? " (" + s.rank() + ")" : ""));
             }
         } else {
             out.println("  <none>");
@@ -38,14 +38,14 @@ public class MissionPrinter {
         out.println();
 
         out.println("Техники:");
-        List<TechniqueUsage> techs = mission.getTechniques();
+        List<TechniqueUsage> techs = mission.techniques();
         if (techs != null && !techs.isEmpty()) {
             for (TechniqueUsage t : techs) {
-                out.println("  - " + (t.getTechnique() != null ? t.getTechnique().getName() : "<unknown technique>"));
+                out.println("  - " + (t.getTechnique() != null ? t.getTechnique().name() : "<unknown technique>"));
                 if (t.getTechnique() != null) {
-                    out.println("    Type: " + safe(t.getTechnique().getType()));
+                    out.println("    Type: " + safe(t.getTechnique().type()));
                 }
-                out.println("    Владелец: " + (t.getOwner() != null ? safe(t.getOwner().getName()) : "<unknown>"));
+                out.println("    Владелец: " + (t.getOwner() != null ? safe(t.getOwner().name()) : "<unknown>"));
                 out.println("    Урон: " + t.getDamage());
                 out.println();
             }
@@ -53,9 +53,9 @@ public class MissionPrinter {
             out.println("  <none>");
         }
 
-        if (mission.getComment() != null && !mission.getComment().isBlank()) {
+        if (mission.comment() != null && !mission.comment().isBlank()) {
             out.println("Заметки:");
-            out.println(mission.getComment());
+            out.println(mission.comment());
             out.println();
         }
     }

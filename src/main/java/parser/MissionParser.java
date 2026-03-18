@@ -55,7 +55,7 @@ public abstract class MissionParser {
     protected Sorcerer findSorcererByName(List<Sorcerer> list, String name) {
         if (name == null) return null;
         for (Sorcerer s : list) {
-            if (s.getName() != null && s.getName().equals(name)) return s;
+            if (s.name() != null && s.name().equals(name)) return s;
         }
         return null;
     }
