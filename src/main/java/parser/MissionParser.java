@@ -14,11 +14,11 @@ import java.util.List;
 public abstract class MissionParser {
     public abstract Mission parse(Path file) throws MissionParsingException;
 
-    protected Long parseLongSafe(String raw) {
+    protected long parseLongSafe(String raw) {
         return parseLongSafe(raw, 0L);
     }
 
-    protected long parseLongSafe(String raw, Long defaultValue) {
+    protected long parseLongSafe(String raw, long defaultValue) {
         if (raw == null) return defaultValue;
         try {
             return Long.parseLong(raw.trim());

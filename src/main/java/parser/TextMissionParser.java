@@ -76,12 +76,12 @@ public class TextMissionParser extends MissionParser {
             }
 
             if (key.startsWith("sorcerer[")) {
-                parse_array_in_line(sorcererMap, key, value);
+                parseArrayInLine(sorcererMap, key, value);
                 continue;
             }
 
             if (key.startsWith("technique[")) {
-                parse_array_in_line(techniqueMap, key, value);
+                parseArrayInLine(techniqueMap, key, value);
             }
         }
 
@@ -141,7 +141,7 @@ public class TextMissionParser extends MissionParser {
         return new Mission(missionId, date, location, outcome, damageCost, curse, sorcerers, techniques, comment);
     }
 
-    private void parse_array_in_line(Map<Integer, Map<String, String>> arr, String key, String value) {
+    private void parseArrayInLine(Map<Integer, Map<String, String>> arr, String key, String value) {
         int idxStart = key.indexOf('[') + 1;
         int idxEnd = key.indexOf(']');
         if (idxStart <= 0 || idxEnd <= idxStart) return;
