@@ -41,12 +41,12 @@ public class MissionPrinter {
         List<TechniqueUsage> techs = mission.techniques();
         if (techs != null && !techs.isEmpty()) {
             for (TechniqueUsage t : techs) {
-                out.println("  - " + (t.getTechnique() != null ? t.getTechnique().name() : "<unknown technique>"));
-                if (t.getTechnique() != null) {
-                    out.println("    Type: " + safe(t.getTechnique().type()));
+                out.println("  - " + (t.technique() != null ? t.technique().name() : "<unknown technique>"));
+                if (t.technique() != null) {
+                    out.println("    Type: " + safe(t.technique().type()));
                 }
-                out.println("    Владелец: " + (t.getOwner() != null ? safe(t.getOwner().name()) : "<unknown>"));
-                out.println("    Урон: " + t.getDamage());
+                out.println("    Владелец: " + (t.owner() != null ? safe(t.owner().name()) : "<unknown>"));
+                out.println("    Урон: " + t.damage());
                 out.println();
             }
         } else {
